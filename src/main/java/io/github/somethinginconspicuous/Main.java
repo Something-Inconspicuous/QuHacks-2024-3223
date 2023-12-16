@@ -126,7 +126,7 @@ public class Main extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //System.out.println("Clicked");
-                nextOut();
+                safeNextOut();
             }
 
             @Override
@@ -201,10 +201,8 @@ public class Main extends JFrame {
     }
 
     public void safeNextOut(){
-        if(output.peek() == null)
-            return;
-
-        nextOut();
+        if(output.peek() != null)
+            nextOut();
     }
 
     public void nextOut(){
@@ -240,12 +238,7 @@ public class Main extends JFrame {
     }
 
     private void runGame(){
-        out("hello");
-        out("Ahhh");
-        enterToContinue();
-        out("you clicked lol");
-        enterToContinue();
-        out("allright les go");
+        beginning();
 
         nextOut();
     }
@@ -274,15 +267,10 @@ public class Main extends JFrame {
         gui.output.offer(str);
     }
 
-    public static void beginning(){
-        out("You wake up. It is dark.");
-        enterToContinue();
-    }
-
-    public static void nameSelf(){
-        out("You pick up a medical report laying on the table. You read your name out loud: ");
-        //pc = new PlayerCharacter(input.nextLine());
-    }
+    //public static void nameSelf(){
+    //    out("You pick up a medical report laying on the table.");
+    //    //pc = new PlayerCharacter(input.nextLine());
+    //}
 
     public static PlayerCharacter pc(){
         return pc;
@@ -295,4 +283,15 @@ public class Main extends JFrame {
     public static TimeLimit timeLimit(){
         return timeLimit;
     }
+
+    //#region game methods
+
+    public static void beginning(){
+        out("You wake up to a dim light shining on your face.");
+        out("For some reason, it smells faintly like soy sauce.");
+        enterToContinue();
+        out("You rise from your bed.");
+    }
+
+    //#endregion
 }
