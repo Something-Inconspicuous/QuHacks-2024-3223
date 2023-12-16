@@ -33,6 +33,7 @@ import io.github.somethinginconspicuous.game.PlayerCharacter;
 import io.github.somethinginconspicuous.game.TimeLimit;
 import io.github.somethinginconspicuous.game.items.Coat;
 import io.github.somethinginconspicuous.game.items.Debris;
+import io.github.somethinginconspicuous.game.items.Key;
 import io.github.somethinginconspicuous.game.items.Keycard;
 import io.github.somethinginconspicuous.game.items.Sandwich;
 
@@ -364,6 +365,25 @@ public class Main extends JFrame {
                 spendTime(10);
                 enterToContinue();
                 hallway1();
+                break;
+
+            case STAFF:
+            case LARGE:
+                // [Go Back]
+                out("You return to the lobby.");
+                spendTime(10);
+                enterToContinue();
+                lobby();
+                break;
+
+
+            case STORE:
+                // [Go Back]
+                out("You leave the storage area.");
+                spendTime(10);
+                enterToContinue();
+                largeRoom();
+            
             default:
                 break;
             
@@ -420,7 +440,43 @@ public class Main extends JFrame {
                 spendTime(5);
                 enterToContinue();
                 lobby();
+                break;
 
+            case STAFF:
+                // [Investigate]
+                if(pc.hasItem(Key.getInstance())){
+                    out("You have already picked up the key");
+                } else {
+                    out("You rummage the slacker's pockets.");
+                    out("You find an eccentric key, and an audio log.");
+                    spendTime(20);
+                    pc.addItem(Key.getInstance());
+                    showItem(Key.getInstance());
+                }
+                enterToContinue();
+                staff();
+
+            case LARGE:
+                // [Store]
+                out("You enter the storage area");
+                spendTime(5);
+                enterToContinue();
+                store();
+                break;
+
+            case STORE:
+                // [Examine the Bodies]
+                if(pc.hasItem(Keycard.getInstance())){
+                    out("You already picked up the keycard.");
+                } else {
+                    out("You rummage around the bodies.");
+                    out("Upon closer inspection, one is holding a keycard.");
+                    pc.addItem(Keycard.getInstance());
+                    showItem(Keycard.getInstance());
+                }
+                enterToContinue();
+                store();
+                break;
             default:
                 break;
         }
@@ -617,6 +673,13 @@ public class Main extends JFrame {
         out("simply asleep, but rather dead.\nGo figure");
         pc.setLocation(Location.STAFF);
         giveChoices(Location.STAFF);
+    }
+
+    private void store(){
+        out("Human and bird-like corpses litter the floor.");
+        out("The smell of blood and soy-sauce pierces the air.");
+        pc.setLocation(Location.STORE);
+        giveChoices(Location.STORE);
     }
 
     //#endregion

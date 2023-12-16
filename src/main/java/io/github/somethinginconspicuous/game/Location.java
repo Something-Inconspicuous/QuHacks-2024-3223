@@ -7,6 +7,7 @@ public enum Location {
     LOBBY("[Go Back]", "[Receptionist]", "[Staff Door]", "[Next Room]"),
     LARGE("[Go Back]", "[Store]", "[Quarters]", "[Emergancy Exit]"),
     STAFF("[Go Back]", "[Investigate Receptionist]", "", ""),
+    STORE("[Go Back]", "[Examine Corpses]", "", "")
     ;
 
     private String[] choices;
