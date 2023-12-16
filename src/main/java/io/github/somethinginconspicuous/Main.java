@@ -33,6 +33,7 @@ import io.github.somethinginconspicuous.game.PlayerCharacter;
 import io.github.somethinginconspicuous.game.TimeLimit;
 import io.github.somethinginconspicuous.game.items.Coat;
 import io.github.somethinginconspicuous.game.items.Debris;
+import io.github.somethinginconspicuous.game.items.Keycard;
 import io.github.somethinginconspicuous.game.items.Sandwich;
 
 public class Main extends JFrame {
@@ -348,6 +349,14 @@ public class Main extends JFrame {
                 lookAroundHospital();
 
                 break;
+
+            case HALLWAY1:
+                // [Go Back]
+                out("You climb back through the door.");
+                spendTime(10);
+                enterToContinue();
+                lookAroundHospital();
+                break;
             default:
                 break;
             
@@ -375,7 +384,26 @@ public class Main extends JFrame {
                 }
                 enterToContinue();
                 lookAroundHospital();
-        
+                break;
+
+            case HALLWAY1:
+                // [Left]
+                out("You walk down the hallway.");
+                enterToContinue();
+                if(!pc.hasItem(Keycard.getInstance())){
+                    spendTime(10);
+                    out("You come apon a locked door, and decide to trun around.");
+                } else {
+                    out("You swipe the keycard at the door.");
+                    out("You enter the room.");
+                    enterToContinue();
+                    out("Various medical instruments are strewn about.");
+                    out("Among them, you find a voice log on the counter.");
+                    spendTime(5);
+                    // TODO: open the door
+                }
+                enterToContinue();
+                hallway1();
             default:
                 break;
         }
@@ -388,6 +416,8 @@ public class Main extends JFrame {
                 if(GameEnvironment.hospDoorIsOpen){
                     out("You climb through the remains of the door.");
                     spendTime(5);
+                    enterToContinue();
+                    hallway1();
                     // TODO: next location
                 } else if(pc.hasItem(Debris.getInstance())){
                     GameEnvironment.hospDoorIsOpen = true;
@@ -401,6 +431,15 @@ public class Main extends JFrame {
                     enterToContinue();
                     lookAroundHospital();
                 }
+
+                break;
+
+            case HALLWAY1:
+                out("You walk down the hallway to your right.");
+                out("You are spat out into the lobby.");
+                spendTime(5);
+                enterToContinue();
+                // TODO: lobby choices    
 
                 break;
         
@@ -512,6 +551,13 @@ public class Main extends JFrame {
             out("There seems to be a loose bit in the wall to your left.");
         pc.setLocation(Location.HOSPITAL_ITEMS);
         giveChoices(Location.HOSPITAL_ITEMS);
+    }
+
+    private void hallway1(){
+        out("You stand in a dark hallway.");
+        out("It is pitch black, illuminated only by\nthe light from the room behind you.");
+        pc.setLocation(Location.HALLWAY1);
+        giveChoices(Location.HALLWAY1);
     }
 
     //#endregion
