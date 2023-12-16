@@ -38,6 +38,6 @@ public class TimeLimit {
     @Override
     public String toString() {
         int mm = minutesOnlyLeft();
-        return hoursLeft() + ":" + (mm == 0 ? "00" : mm);
+        return hoursLeft() + ":" + (mm <= 10 ? "0" + mm : mm);
     }
 }
