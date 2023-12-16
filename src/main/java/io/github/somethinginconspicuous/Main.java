@@ -357,6 +357,13 @@ public class Main extends JFrame {
                 enterToContinue();
                 lookAroundHospital();
                 break;
+
+            case LOBBY:
+                // [Go Back]
+                out("You head back down the hallway.");
+                spendTime(10);
+                enterToContinue();
+                hallway1();
             default:
                 break;
             
@@ -404,6 +411,16 @@ public class Main extends JFrame {
                 }
                 enterToContinue();
                 hallway1();
+                break;
+            
+            case LOBBY:
+                // [Receptionist]
+                out("It appears that the receptions is sleeping.");
+                out("You question the diligence of the staff here.");
+                spendTime(5);
+                enterToContinue();
+                lobby();
+
             default:
                 break;
         }
@@ -435,14 +452,29 @@ public class Main extends JFrame {
                 break;
 
             case HALLWAY1:
+                // [Right]
                 out("You walk down the hallway to your right.");
                 out("You are spat out into the lobby.");
                 spendTime(5);
                 enterToContinue();
-                // TODO: lobby choices    
+                lobby();
 
                 break;
         
+            case LOBBY:
+                // [Staff Door]
+                if(!pc.hasItem(Keycard.getInstance())){
+                    out("It's locked. Go figure.");
+                    spendTime(5);
+                    enterToContinue();
+                    lobby();
+                } else {
+                    out("You swipe the keycard, and the door slides open.");
+                    spendTime(5);
+                    enterToContinue();
+                    staff();
+                }
+                break;
             default:
                 break;
         }
@@ -465,6 +497,11 @@ public class Main extends JFrame {
                 lookAroundHospital();
                 break;
         
+            case LOBBY:
+                // [Next Room]
+                out("You continue past the lobby.");
+                largeRoom();
+
             default:
                 break;
         }
@@ -558,6 +595,28 @@ public class Main extends JFrame {
         out("It is pitch black, illuminated only by\nthe light from the room behind you.");
         pc.setLocation(Location.HALLWAY1);
         giveChoices(Location.HALLWAY1);
+    }
+
+    private void lobby(){
+        out("It's dark, but a faint red light from behind");
+        out("the receptionist booth allows for some visibility.");
+        out("The booth is behind a wall of glass.");
+        out("The smell of soy sauce is overpowered by something foul.");
+        pc.setLocation(Location.LOBBY);
+        giveChoices(Location.LOBBY);
+    }
+
+    private void largeRoom(){
+        out("The lobby opens to a large room dimly lit in red.");
+        pc.setLocation(Location.LARGE);
+        giveChoices(Location.LARGE);
+    }
+
+    private void staff(){
+        out("Upon closer inspection, the receptionist is not");
+        out("simply asleep, but rather dead.\nGo figure");
+        pc.setLocation(Location.STAFF);
+        giveChoices(Location.STAFF);
     }
 
     //#endregion
