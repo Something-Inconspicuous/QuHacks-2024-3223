@@ -6,9 +6,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 //import java.awt.GridLayout;
@@ -27,12 +30,15 @@ import io.github.somethinginconspicuous.game.PlayerCharacter;
 import io.github.somethinginconspicuous.game.TimeLimit;
 
 public class Main extends JFrame {
+    private static final String CTC = "[Click to Continue]";
+
     //private static final Font FONT = new Font("Orbitron", Font.PLAIN, 24);
     private static Font FONT;
 
     static {
         try {
             FONT = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/Press_Start_2P/PressStart2P-Regular.ttf")).deriveFont(24.0f);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(FONT);
         } catch (FontFormatException | IOException e) {
             FONT = Font.getFont("Serif");
             e.printStackTrace();
@@ -109,10 +115,31 @@ public class Main extends JFrame {
         outPanel = new JPanel();
         outPanel.setForeground(Color.BLACK);
         outPanel.setBackground(Color.BLACK);
+
         outLabel = new JLabel("output output output output output output output output");
         outLabel.setForeground(Color.WHITE);
         outLabel.setBackground(Color.BLACK);
         outLabel.setFont(FONT);
+        MouseListener clickToNextML = new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //System.out.println("Clicked");
+                nextOut();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {} // Nothing
+            @Override
+            public void mouseReleased(MouseEvent e) {} // Nothing
+            @Override
+            public void mouseEntered(MouseEvent e) {} // Nothing
+            @Override
+            public void mouseExited(MouseEvent e) {} // Nothing
+            
+        };
+        //pane.addMouseListener(clickToNextML);
+        outLabel.addMouseListener(clickToNextML);
         
         outPanel.add(outLabel);
         
@@ -172,13 +199,54 @@ public class Main extends JFrame {
         super.validate();
     }
 
+    public void safeNextOut(){
+        if(output.peek() == null)
+            return;
+            
+        nextOut();
+    }
+
     public void nextOut(){
-        outLabel.setText(output.poll());
+        StringBuilder sb = new StringBuilder("<html><div style=\"font-family:'" + FONT.getName() +"'\">");
+
+        String line;
+        while((line = output.poll()) != null){
+            sb.append(
+                line
+                .replace("\n", "<br>")
+                .replaceAll("(?:\\\\\\\\)(?<!\\\\)<", "&lt;")
+                .replaceAll("(?:\\\\\\\\)(?<!\\\\)>", "&gt;")
+            ).append("<br>");
+
+            if(line.equals(CTC))
+                break;
+        }
+
+
+        //String out = sb.toString();
+        sb.append("</html>");
+        System.out.println("Outputting: " + sb);
+        outLabel.setText(sb.toString());
+        //outLabel.setText("<html>" + out.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
         validate();
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Main::runGUI);
+
+        SwingUtilities.invokeLater(() -> gui.runGame());
+        
+    }
+
+    private void runGame(){
+        out("hello");
+        out("Ahhh");
+        enterToContinue();
+        out("you clicked lol");
+        enterToContinue();
+        out("allright les go");
+
+        nextOut();
     }
 
     private static void runGUI() {
@@ -190,7 +258,7 @@ public class Main extends JFrame {
     }
 
     public static void enterToContinue(){
-        in();
+        out(CTC);
     }
 
     public static String in(){
