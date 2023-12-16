@@ -7,6 +7,7 @@ public class PlayerCharacter {
 
     public PlayerCharacter(String name){
         this.name = name;
+        inventory = new Inventory();
         setLocation(Location.HOSPITAL);
     }
 
@@ -24,5 +25,9 @@ public class PlayerCharacter {
 
     public boolean hasItem(Item item){
         return inventory.contains(item);
+    }
+
+    public void addItem(Item item){
+        inventory.addItem(item);
     }
 }

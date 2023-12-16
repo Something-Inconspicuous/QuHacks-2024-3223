@@ -4,7 +4,7 @@ public class TimeLimit {
     private int minutesLeft;
 
     public TimeLimit(){
-        this(9 * 60); // 9 hours
+        this(3 * 60); // 3 hours
     }
 
     public TimeLimit(int minutesLeft){

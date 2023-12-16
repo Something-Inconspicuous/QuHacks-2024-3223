@@ -26,10 +26,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import io.github.somethinginconspicuous.game.GameEnvironment;
 import io.github.somethinginconspicuous.game.Item;
 import io.github.somethinginconspicuous.game.Location;
 import io.github.somethinginconspicuous.game.PlayerCharacter;
 import io.github.somethinginconspicuous.game.TimeLimit;
+import io.github.somethinginconspicuous.game.items.Coat;
+import io.github.somethinginconspicuous.game.items.Debris;
+import io.github.somethinginconspicuous.game.items.Sandwich;
 
 public class Main extends JFrame {
     private static final String CTC = "[Click to Continue]";
@@ -103,7 +107,7 @@ public class Main extends JFrame {
         timePanel.setBackground(Color.BLACK);
         timePanel.setForeground(Color.BLACK);
         
-        timeLabel = new JLabel("Time: 9:00");
+        timeLabel = new JLabel("Time: " + timeLimit);
         timeLabel.setForeground(Color.WHITE);
         timeLabel.setBackground(Color.BLACK);
         timeLabel.setFont(FONT);
@@ -315,7 +319,7 @@ public class Main extends JFrame {
     private void end() {
         output.clear();
         out("The oxygen has run out. Unfortunate.");
-        SwingUtilities.invokeLater(() -> {while(true);});
+        safeNextOut();
     }
 
     private void choice0(ActionEvent e) {
@@ -323,7 +327,7 @@ public class Main extends JFrame {
             case HOSPITAL:
                 // [Go Back to Bed]
                 spendHours(1);
-                out("You feel you haven't slept enough, so you go back to sleep.");
+                out("You feel you haven't slept enough, so you go back to bed.");
                 enterToContinue();
                 out("You wake up about an hour later.");
                 enterToContinue();
@@ -332,7 +336,17 @@ public class Main extends JFrame {
 
             case HOSPITAL_ITEMS:
                 // [Sandwich]
-                out("It's slightly wet, but you take it with you anyways.");
+                if(pc.hasItem(Sandwich.getInstance())){
+                    out("You have already picked up the sandwich.");
+                } else {
+                    out("It's slightly wet, but you take it with you anyways.");
+                    spendTime(5);
+                    showItem(Sandwich.getInstance());
+                    pc.addItem(Sandwich.getInstance());
+                }
+                enterToContinue();
+                lookAroundHospital();
+
                 break;
             default:
                 break;
@@ -343,16 +357,24 @@ public class Main extends JFrame {
     private void choice1(ActionEvent e){
         switch(pc.location()){
             case HOSPITAL:
-                // [Observer Your Suroundings]
+                // [Observe Your Suroundings]
                 out("You look around");
                 enterToContinue();
-                out("There is an old sandwich sitting on the table beside you.");
-                out("There a dark figure sitting in the corner.");
-                out("There is a door on the right wall.");
-                out("There seems to be a loose bit in the wall to your left.");
-                pc.setLocation(Location.HOSPITAL_ITEMS);
-                giveChoices(Location.HOSPITAL_ITEMS);
+                lookAroundHospital();
                 break;
+
+            case HOSPITAL_ITEMS:
+                // [Figure]
+                if(pc.hasItem(Coat.getInstance())){
+                    out("You have already picked up the coat.");
+                } else {
+                    out("It turns out to be a coat; nice and warm.");
+                    spendTime(5);
+                    pc.addItem(Coat.getInstance());
+                    showItem(Coat.getInstance());
+                }
+                enterToContinue();
+                lookAroundHospital();
         
             default:
                 break;
@@ -361,7 +383,12 @@ public class Main extends JFrame {
 
     private void choice2(ActionEvent e) {
         switch(pc.location()){
-            case HOSPITAL:
+            case HOSPITAL_ITEMS:
+                // [Door]
+                if(pc.hasItem(Debris.getInstance())){
+                    GameEnvironment.hospDoorIsOpen = true;
+                    out("You bash at the door with a hunk of debris.\nA hole forms through it.");
+                }
                 break;
         
             default:
@@ -379,8 +406,16 @@ public class Main extends JFrame {
         }
     }
 
+
+
     private void spendHours(int hours){
         timeLimit.spendHours(hours);
+        timeLabel.setText("Time: " + timeLimit);
+    }
+    
+    
+    private void spendTime(int minutes) {
+        timeLimit.spend(minutes);
         timeLabel.setText("Time: " + timeLimit);
     }
 
@@ -439,6 +474,18 @@ public class Main extends JFrame {
         enterToContinue();
         out("You rise from your bed.");
         giveChoices(pc.location());
+    }
+
+    private void lookAroundHospital() {
+        if(!pc.hasItem(Sandwich.getInstance()))
+            out("There is an old sandwich sitting on the table beside you.");
+            
+        if(!pc.hasItem(Coat.getInstance()))
+            out("There is a dark figure sitting in the corner.");
+        out("There is a door on the right wall.");
+        out("There seems to be a loose bit in the wall to your left.");
+        pc.setLocation(Location.HOSPITAL_ITEMS);
+        giveChoices(Location.HOSPITAL_ITEMS);
     }
 
     //#endregion
