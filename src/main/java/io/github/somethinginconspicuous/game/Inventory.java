@@ -8,6 +8,10 @@ public class Inventory implements Iterable<Item> {
 
     ArrayList<Item> items = new ArrayList<>();
 
+    public void addItem(Item item){
+        items.add(item);
+    }
+
     @Override
     public Iterator<Item> iterator() {
         return items.iterator();

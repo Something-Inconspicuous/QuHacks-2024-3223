@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import io.github.somethinginconspicuous.game.Item;
 import io.github.somethinginconspicuous.game.PlayerCharacter;
 import io.github.somethinginconspicuous.game.TimeLimit;
 
@@ -202,7 +203,7 @@ public class Main extends JFrame {
     public void safeNextOut(){
         if(output.peek() == null)
             return;
-            
+
         nextOut();
     }
 
@@ -285,6 +286,10 @@ public class Main extends JFrame {
 
     public static PlayerCharacter pc(){
         return pc;
+    }
+
+    public static void showItem(Item item){
+        gui.inventoryPanel.add(new JLabel(item.getImageIcon()));
     }
 
     public static TimeLimit timeLimit(){
