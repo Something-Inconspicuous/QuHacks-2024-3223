@@ -17,4 +17,7 @@ public class Inventory implements Iterable<Item> {
         return items;
     }
     
+    public boolean contains(Item item){
+        return items.contains(item);
+    }
 }
