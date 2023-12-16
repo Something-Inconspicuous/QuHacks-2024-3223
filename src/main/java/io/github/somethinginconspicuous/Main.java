@@ -1,7 +1,6 @@
 package io.github.somethinginconspicuous;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -9,14 +8,12 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 //import java.awt.GridLayout;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -290,6 +287,18 @@ public class Main extends JFrame {
             case "Choice_0":
                 choice0(e);
                 break;
+
+            case "Choice_1":
+                choice1(e);
+                break;
+
+            case "Choice_2":
+                choice2(e);
+                break;
+
+            case "Choice_3":
+                choice3(e);
+                break;
         
             default:
                 break;
@@ -300,6 +309,8 @@ public class Main extends JFrame {
         else 
             end();
     }
+
+
 
     private void end() {
         output.clear();
@@ -318,11 +329,53 @@ public class Main extends JFrame {
                 enterToContinue();
                 beginning();
                 break;
+
             case HOSPITAL_ITEMS:
+                // [Sandwich]
+                out("It's slightly wet, but you take it with you anyways.");
                 break;
             default:
                 break;
             
+        }
+    }
+
+    private void choice1(ActionEvent e){
+        switch(pc.location()){
+            case HOSPITAL:
+                // [Observer Your Suroundings]
+                out("You look around");
+                enterToContinue();
+                out("There is an old sandwich sitting on the table beside you.");
+                out("There a dark figure sitting in the corner.");
+                out("There is a door on the right wall.");
+                out("There seems to be a loose bit in the wall to your left.");
+                pc.setLocation(Location.HOSPITAL_ITEMS);
+                giveChoices(Location.HOSPITAL_ITEMS);
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    private void choice2(ActionEvent e) {
+        switch(pc.location()){
+            case HOSPITAL:
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    private void choice3(ActionEvent e) {
+        switch(pc.location()){
+            case HOSPITAL:
+                break;
+        
+            default:
+                break;
         }
     }
 
