@@ -385,10 +385,23 @@ public class Main extends JFrame {
         switch(pc.location()){
             case HOSPITAL_ITEMS:
                 // [Door]
-                if(pc.hasItem(Debris.getInstance())){
+                if(GameEnvironment.hospDoorIsOpen){
+                    out("You climb through the remains of the door.");
+                    spendTime(5);
+                    // TODO: next location
+                } else if(pc.hasItem(Debris.getInstance())){
                     GameEnvironment.hospDoorIsOpen = true;
                     out("You bash at the door with a hunk of debris.\nA hole forms through it.");
+                    spendTime(10);
+                    enterToContinue();
+                    lookAroundHospital();
+                } else {
+                    out("The door is jammed, but doesn't look very sturdy.");
+                    spendTime(5);
+                    enterToContinue();
+                    lookAroundHospital();
                 }
+
                 break;
         
             default:
@@ -398,7 +411,19 @@ public class Main extends JFrame {
 
     private void choice3(ActionEvent e) {
         switch(pc.location()){
-            case HOSPITAL:
+            case HOSPITAL_ITEMS:
+                // [Wall]
+                if(pc.hasItem(Debris.getInstance())){
+                    out("You have already picked up the debris.");
+                } else {
+                    out("You peer behind the loose piece of wall.");
+                    out("It tears off.");
+                    spendTime(5);
+                    pc.addItem(Debris.getInstance());
+                    showItem(Debris.getInstance());
+                }
+                enterToContinue();
+                lookAroundHospital();
                 break;
         
             default:
@@ -483,7 +508,8 @@ public class Main extends JFrame {
         if(!pc.hasItem(Coat.getInstance()))
             out("There is a dark figure sitting in the corner.");
         out("There is a door on the right wall.");
-        out("There seems to be a loose bit in the wall to your left.");
+        if(!pc.hasItem(Debris.getInstance()))
+            out("There seems to be a loose bit in the wall to your left.");
         pc.setLocation(Location.HOSPITAL_ITEMS);
         giveChoices(Location.HOSPITAL_ITEMS);
     }
