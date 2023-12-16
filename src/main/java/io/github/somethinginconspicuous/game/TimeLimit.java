@@ -34,4 +34,10 @@ public class TimeLimit {
     public int minutesOnlyLeft(){
         return minutesLeft % 60;
     }
+
+    @Override
+    public String toString() {
+        int mm = minutesOnlyLeft();
+        return hoursLeft() + ":" + (mm == 0 ? "00" : mm);
+    }
 }

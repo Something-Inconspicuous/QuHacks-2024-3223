@@ -10,10 +10,13 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 //import java.awt.GridLayout;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -27,11 +30,13 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import io.github.somethinginconspicuous.game.Item;
+import io.github.somethinginconspicuous.game.Location;
 import io.github.somethinginconspicuous.game.PlayerCharacter;
 import io.github.somethinginconspicuous.game.TimeLimit;
 
 public class Main extends JFrame {
     private static final String CTC = "[Click to Continue]";
+    private static final String GIVE_CHOICES = "__GIVE_CHOICES__";
 
     //private static final Font FONT = new Font("Orbitron", Font.PLAIN, 24);
     private static Font FONT;
@@ -71,7 +76,7 @@ public class Main extends JFrame {
     private JButton[] choicesButtons;
 
     private static TimeLimit timeLimit = new TimeLimit();
-    private static PlayerCharacter pc;
+    private static PlayerCharacter pc = new PlayerCharacter("Tracy Dickenson");
     //private static Scanner input = new Scanner(System.in);
 
     private Main(){
@@ -125,8 +130,9 @@ public class Main extends JFrame {
 
             @Override
             public void mouseClicked(MouseEvent e) {
+                e.consume();
                 //System.out.println("Clicked");
-                safeNextOut();
+                SwingUtilities.invokeLater(() -> safeNextOut());
             }
 
             @Override
@@ -141,6 +147,21 @@ public class Main extends JFrame {
         };
         //pane.addMouseListener(clickToNextML);
         outLabel.addMouseListener(clickToNextML);
+        addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {} // Nothing
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                System.out.println(e.getKeyCode());
+                SwingUtilities.invokeLater(() -> safeNextOut());
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {} // Nothing
+            
+        });
         
         outPanel.add(outLabel);
         
@@ -201,6 +222,7 @@ public class Main extends JFrame {
     }
 
     public void safeNextOut(){
+        System.out.println("Attempting output");
         if(output.peek() != null)
             nextOut();
     }
@@ -208,8 +230,19 @@ public class Main extends JFrame {
     public void nextOut(){
         StringBuilder sb = new StringBuilder("<html><div style=\"font-family:'" + FONT.getName() +"'\">");
 
+        for(JButton bttn : choicesButtons){
+            bttn.setVisible(false);
+        }
+
         String line;
         while((line = output.poll()) != null){
+            if(line.equals(GIVE_CHOICES)){
+                for(JButton bttn : choicesButtons){
+                    bttn.setVisible(true);
+                }
+                break;
+            }
+
             sb.append(
                 line
                 .replace("\n", "<br>")
@@ -248,7 +281,53 @@ public class Main extends JFrame {
     }
 
     public void onChoice(ActionEvent e){
+        String actionCommand = e.getActionCommand();
+        System.out.println(actionCommand);
+        System.out.println(pc.location());
 
+        switch (actionCommand) {
+            case "Choice_0":
+                choice0(e);
+                break;
+        
+            default:
+                break;
+        }
+
+        if(timeLimit.hasTimeLeft())
+            safeNextOut();
+        else 
+            end();
+    }
+
+    private void end() {
+        output.clear();
+        out("The oxygen has run out. Unfortunate.");
+        SwingUtilities.invokeLater(() -> {while(true);});
+    }
+
+    private void choice0(ActionEvent e) {
+        switch(pc.location()){
+            case HOSPITAL:
+                // [Go Back to Bed]
+                spendHours(1);
+                out("You feel you haven't slept enough, so you go back to sleep.");
+                enterToContinue();
+                out("You wake up about an hour later.");
+                enterToContinue();
+                beginning();
+                break;
+            case HOSPITAL_ITEMS:
+                break;
+            default:
+                break;
+            
+        }
+    }
+
+    private void spendHours(int hours){
+        timeLimit.spendHours(hours);
+        timeLabel.setText("Time: " + timeLimit);
     }
 
     public static void enterToContinue(){
@@ -284,6 +363,20 @@ public class Main extends JFrame {
         return timeLimit;
     }
 
+    public static void giveChoices(String... choices){
+        for(int i = 0; i < gui.choicesButtons.length; i++){
+            gui.choicesButtons[i].setText(choices[i]);
+        }
+        out(GIVE_CHOICES);
+    }
+
+    public static void giveChoices(Location location){
+        for(int i = 0; i < gui.choicesButtons.length; i++){
+            gui.choicesButtons[i].setText(location.getChoice(i));
+        }
+        out(GIVE_CHOICES);
+    }
+    
     //#region game methods
 
     public static void beginning(){
@@ -291,6 +384,7 @@ public class Main extends JFrame {
         out("For some reason, it smells faintly like soy sauce.");
         enterToContinue();
         out("You rise from your bed.");
+        giveChoices(pc.location());
     }
 
     //#endregion
