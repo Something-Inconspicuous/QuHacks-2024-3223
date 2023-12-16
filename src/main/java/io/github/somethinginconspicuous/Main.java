@@ -129,14 +129,14 @@ public class Main extends JFrame {
         MouseListener clickToNextML = new MouseListener() {
 
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 e.consume();
                 //System.out.println("Clicked");
                 SwingUtilities.invokeLater(() -> safeNextOut());
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {} // Nothing
+            public void mouseClicked(MouseEvent e) {} // Nothing
             @Override
             public void mouseReleased(MouseEvent e) {} // Nothing
             @Override
@@ -145,8 +145,9 @@ public class Main extends JFrame {
             public void mouseExited(MouseEvent e) {} // Nothing
             
         };
-        //pane.addMouseListener(clickToNextML);
+        pane.addMouseListener(clickToNextML);
         outLabel.addMouseListener(clickToNextML);
+        addMouseListener(clickToNextML);
         addKeyListener(new KeyListener() {
 
             @Override
