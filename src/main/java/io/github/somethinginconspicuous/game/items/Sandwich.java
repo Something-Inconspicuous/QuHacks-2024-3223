@@ -17,7 +17,7 @@ public class Sandwich implements Item {
 
     @Override
     public ImageIcon getImageIcon() {
-        return new ImageIcon("src/main/resources/images/sandwich_hack.png");
+        return new ImageIcon(getClass().getResource("/images/sandwich_hack.png"));
     }
 
     @Override

@@ -18,7 +18,7 @@ public class Watch implements Item {
 
     @Override
     public ImageIcon getImageIcon() {
-        return new ImageIcon("src/main/resources/images/watch_hack.png");
+        return new ImageIcon(getClass().getResource("/images/watch_hack.png"));
     }
 
     @Override

@@ -12,8 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 //import java.awt.GridLayout;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -46,11 +46,14 @@ public class Main extends JFrame {
 
     static {
         try {
-            FONT = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/Press_Start_2P/PressStart2P-Regular.ttf")).deriveFont(24.0f);
+            // URL url = Main.class.getResource("");
+            InputStream is = Main.class.getResourceAsStream("/Press_Start_2P/PressStart2P-Regular.ttf");
+            Font font = Font.createFont(Font.TRUETYPE_FONT, is);
+            //FONT = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/resources/Press_Start_2P/PressStart2P-Regular.ttf")).deriveFont(24.0f);
+            FONT = font.deriveFont(24.0f);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(FONT);
         } catch (FontFormatException | IOException e) {
-            FONT = Font.getFont("Serif");
-            e.printStackTrace();
+            throw new RuntimeException("Could not load font", e);
         }
     
     }

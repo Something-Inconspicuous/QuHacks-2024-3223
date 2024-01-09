@@ -17,7 +17,7 @@ public class Map implements Item {
 
     @Override
     public ImageIcon getImageIcon() {
-        return new ImageIcon("src/main/resources/images/pxil-frame-0.png");
+        return new ImageIcon(getClass().getResource("/images/pxil-frame-0.png"));
     }
 
     @Override

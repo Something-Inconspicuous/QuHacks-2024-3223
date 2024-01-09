@@ -17,7 +17,7 @@ public class Keycard implements Item {
 
     @Override
     public ImageIcon getImageIcon() {
-        return new ImageIcon("src/main/resources/images/keycard_hack.png");
+        return new ImageIcon(getClass().getResource("/images/keycard_hack.png"));
     }
 
     @Override

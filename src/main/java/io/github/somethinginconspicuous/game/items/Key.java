@@ -17,7 +17,7 @@ public class Key implements Item {
 
     @Override
     public ImageIcon getImageIcon() {
-        return new ImageIcon("src/main/resources/images/imageedit_25_6825500106_hack.png");
+        return new ImageIcon(getClass().getResource("/images/imageedit_25_6825500106_hack.png"));
     }
 
     @Override

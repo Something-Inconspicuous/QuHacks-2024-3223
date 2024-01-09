@@ -1,5 +1,7 @@
 package io.github.somethinginconspicuous.game.items;
 
+import java.io.InputStream;
+
 import javax.swing.ImageIcon;
 
 import io.github.somethinginconspicuous.game.Item;
@@ -17,7 +19,7 @@ public class Coat implements Item {
 
     @Override
     public ImageIcon getImageIcon() {
-        return new ImageIcon("src/main/resources/images/coat_hack.png");
+        return new ImageIcon(getClass().getResource("/images/coat_hack.png"));
     }
 
     @Override

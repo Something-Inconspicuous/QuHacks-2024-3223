@@ -17,7 +17,7 @@ public class Debris implements Item {
 
     @Override
     public ImageIcon getImageIcon() {
-        return new ImageIcon("src/main/resources/images/debris_hack.png");
+        return new ImageIcon(getClass().getResource("/images/debris_hack.png"));
     }
 
     @Override
